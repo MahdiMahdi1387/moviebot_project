@@ -90,7 +90,7 @@ def info_showing(query):
         else:
             bot.edit_message_text(chat_id=chat_id, message_id=message_id, text=info)
     except Exception:
-        bot.edit_message_text(chat_id=chat_id, message_id=message_id \
+        bot.edit_message_text(chat_id=chat_id, message_id=message_id, \
                                text='❌ Wrong message or API error...')
 
 if __name__ == '__main__':
