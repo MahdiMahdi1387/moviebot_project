@@ -1,15 +1,9 @@
 import telebot as tl
 from base import TOKEN
-from API import *
+from movies_db_manage import *
 
 
 bot = tl.TeleBot(TOKEN)
-
-
-def plot_getter(title: str) -> str:
-    plot = get_movie_info_by_id( \
-            get_movie_info_by_name(title)[4])[5]
-    return plot
 
 
 @bot.message_handler(commands=['start'])
@@ -37,7 +31,8 @@ def search1(message):
 def search2(message):
     try:
         name = message.text
-        result = get_movie_info_by_name(name)
+        db_manage(name)
+        result = db_movie_by_name(name)
 
         markup = tl.types.InlineKeyboardMarkup()
 
@@ -65,7 +60,7 @@ def helper(message):
 @bot.message_handler(commands=['popular'])
 def popular(message):
     try:
-        popular_list = [get_movie_info_by_id(i) for i in range(1, 11)]
+        popular_list = [db_movie_by_id(i) for i in range(1, 11)]
         text_list = [f'title:{result[0]}, year:{result[1]},' \
                     f'imdb: {result[3]}\n' for result in popular_list]
         text = ''
@@ -82,8 +77,9 @@ def info_showing(query):
     message_id = query.message.message_id
     try:
         callback, movie_name = query.data.split(':', 1)
-        plot = plot_getter(movie_name)
-        result = get_movie_info_by_name(movie_name)
+        db_manage(movie_name)
+        result = db_movie_by_name(movie_name)
+        plot = result[4]
         
         info = f'💬 title:{result[0]} | year:{result[1]} | country:' \
         f'{result[2]} | imdb: {result[3]}'
@@ -95,16 +91,6 @@ def info_showing(query):
     except Exception:
         bot.edit_message_text(message_id=message_id, \
                                text='❌ Wrong message or API error...')
-
-
-#@bot.message_handler(func= lambda message: True)
-#def handle_other_message(message):
-#    if message.text == 'return':
-#        markup = tl.types.ReplyKeyboardRemove()
-#       bot.send_message(message.chat.id, 'let\'s get back to the main menu'
-#                         , reply_markup=markup)
-#    else:
-#        bot.send_message(message.chat.id, 'I can\'t get it can, you say it clearly?')
 
 if __name__ == '__main__':
     bot.infinity_polling()
