@@ -37,9 +37,9 @@ def search2(message):
         markup = tl.types.InlineKeyboardMarkup()
 
         btn1 = tl.types.InlineKeyboardButton(text='info', \
-                                            callback_data=f'info:{result[0]}')
+                                            callback_data=f'info:{result['title']}')
         btn2 = tl.types.InlineKeyboardButton(text='plot', \
-                                            callback_data=f'plot:{result[0]}')
+                                            callback_data=f'plot:{result['title']}')
 
         markup.add(btn1, btn2)
 
@@ -61,8 +61,8 @@ def helper(message):
 def popular(message):
     try:
         popular_list = [db_movie_by_id(i) for i in range(1, 11)]
-        text_list = [f'title:{result[0]}, year:{result[2]},' \
-                    f'imdb: {result[3]}\n' for result in popular_list]
+        text_list = [f'title:{result['title']}, year:{result['year']},' \
+                    f'imdb: {result['imdb_rating']}\n' for result in popular_list]
         text = ''
         for i in text_list:
             text += i
@@ -75,21 +75,22 @@ def popular(message):
 @bot.callback_query_handler(func= lambda q: True)
 def info_showing(query):
     chat_id = query.message.chat.id
+    message_id = query.message.message_id
     try:
         callback, movie_name = query.data.split(':', 1)
         db_manage(movie_name)
         result = db_movie_by_name(movie_name)
-        plot = result[4]
+        plot = result['plot']
         
-        info = f'💬 title:{result[0]} | year:{result[2]} | country:' \
-        f'{result[3]} | imdb: {result[4]}'
+        info = f'💬 title:{result['title']} | year:{result['year']} | country:' \
+        f'{result['country']} | imdb: {result['imdb_rating']}'
 
         if callback == 'plot':
-            bot.edit_message_text(chat_id=chat_id, text=plot)
+            bot.edit_message_text(chat_id=chat_id, message_id=message_id, text=plot)
         else:
-            bot.edit_message_text(chat_id=chat_id, text=info)
+            bot.edit_message_text(chat_id=chat_id, message_id=message_id, text=info)
     except Exception:
-        bot.edit_message_text(chat_id=chat_id, \
+        bot.edit_message_text(chat_id=chat_id, message_id=message_id \
                                text='❌ Wrong message or API error...')
 
 if __name__ == '__main__':

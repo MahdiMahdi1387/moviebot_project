@@ -42,8 +42,8 @@ def add_movie(movie_id: int, title: str, year: int,
             VALUES (?, ?, ?, ?, ?, ?, ?)
         """
 
-        cursor.execute(query, (movie_id, title, year, country
-                            , imdb_rating, plot, poster_url))
+        cursor.execute(query, (movie_id, title, year, country,
+                               imdb_rating, plot, poster_url))
         
         conn.commit()
     except Exception as e:
@@ -77,6 +77,7 @@ def db_movie_by_id(movie_id: int) -> dict | None:
     """To search a movie in database by id"""
 
     conn = sq.connect(MOVIES_DB)
+    conn.row_factory = sq.Row
     cursor = conn.cursor()
     try:
         query = """
@@ -164,6 +165,7 @@ def db_manage(input: int | str) -> bool | None:
                             API_in[1],
                             API_in[2],
                             API_in[3],
+                            API_in[4],
                             API_in[5],
                             API_in[6]
                         )
