@@ -1,7 +1,7 @@
 import requests
 
 
-def get_movie_info_by_name(movie_name: str) -> int:
+def get_movie_id_by_name(movie_name: str) -> int:
     url = f'https://moviesapi.ir/api/v1/movies'
     params_dict = {
         'q': movie_name
