@@ -1,2 +1,2 @@
-TOKEN = '8787951204:AAFtuxTgZFvUwfCWhHONNaF3pW4j8O8d5_Y'
+TOKEN = ''
 MOVIES_DB = 'src/movies.db'
