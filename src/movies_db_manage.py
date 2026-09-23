@@ -58,6 +58,7 @@ def db_movie_by_name(title: str) -> dict | None:
     """To search a movie in database by name"""
 
     conn = sq.connect(MOVIES_DB)
+    conn.row_factory = sq.Row
     cursor = conn.cursor()
     try:
         query = """

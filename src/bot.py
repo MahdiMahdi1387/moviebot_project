@@ -61,7 +61,7 @@ def helper(message):
 def popular(message):
     try:
         popular_list = [db_movie_by_id(i) for i in range(1, 11)]
-        text_list = [f'title:{result[0]}, year:{result[1]},' \
+        text_list = [f'title:{result[0]}, year:{result[2]},' \
                     f'imdb: {result[3]}\n' for result in popular_list]
         text = ''
         for i in text_list:
@@ -74,22 +74,22 @@ def popular(message):
 
 @bot.callback_query_handler(func= lambda q: True)
 def info_showing(query):
-    message_id = query.message.message_id
+    chat_id = query.message.chat.id
     try:
         callback, movie_name = query.data.split(':', 1)
         db_manage(movie_name)
         result = db_movie_by_name(movie_name)
         plot = result[4]
         
-        info = f'💬 title:{result[0]} | year:{result[1]} | country:' \
-        f'{result[2]} | imdb: {result[3]}'
+        info = f'💬 title:{result[0]} | year:{result[2]} | country:' \
+        f'{result[3]} | imdb: {result[4]}'
 
         if callback == 'plot':
-            bot.edit_message_text(message_id=message_id, text=plot)
+            bot.edit_message_text(chat_id=chat_id, text=plot)
         else:
-            bot.edit_message_text(message_id=message_id, text=info)
+            bot.edit_message_text(chat_id=chat_id, text=info)
     except Exception:
-        bot.edit_message_text(message_id=message_id, \
+        bot.edit_message_text(chat_id=chat_id, \
                                text='❌ Wrong message or API error...')
 
 if __name__ == '__main__':

@@ -37,4 +37,4 @@ def full_info(movie_id: int) -> list:
         except Exception:
             image: str | None = None
 
-        return (movie_id, title, country , year, imdb_rate, plot, image)
+        return (movie_id, title, year, country, imdb_rate, plot, image)
